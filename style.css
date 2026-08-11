@@ -129,6 +129,14 @@ body {
   left: 87.1675%;
 }
 
+/* Agave chair's photo has the chair sitting closer to the frame's right
+   edge than the lamp/mermaid photos do, so the shared 87.1675% overlap
+   was creeping onto the chair itself - nudge a bit further right just
+   for this page to clear it. */
+.hero__content[data-detail="2"] .hero__mint--right {
+  left: 97%;
+}
+
 /* Horizontal-photo pages (01, 04 - see .hero__detail-photo--horizontal
    below) are full window height, so they're much wider than the vertical
    pages (02/03/05) - the mint piece slides further right than the shared
@@ -367,6 +375,17 @@ body {
   opacity: 1;
 }
 
+/* Once a detail page opens, the hover-triggered thumbnail has to
+   disappear even if the cursor never moved off the number that opened
+   it - otherwise it just sits there on top of the new page. :hover is
+   still literally true in that case, so this needs more specificity
+   than the :hover rules above to win (5 selector components vs. their
+   4), not just source order. */
+.hero__content[data-detail] .hero__rail-item:hover + .hero__rail-preview,
+.hero__content[data-detail] .hero__rail-item:focus-visible + .hero__rail-preview {
+  opacity: 0;
+}
+
 .hero__rail-preview[data-n="1"] {
   top: 2.9102%;
   left: 61.8785%;
@@ -426,6 +445,24 @@ body {
   aspect-ratio: 3072 / 4096;
   object-fit: cover;
   z-index: 1;
+}
+
+/* Agave's photos (750:233 in Figma) were re-exported with the canvas
+   extended rightward specifically so the mint-right overlap lands on
+   background instead of the chair - their aspect ratio is now much
+   closer to square (~3821:3651) than the shared 3072:4096 portrait
+   photos. Height-driven instead of width-driven so the extra width
+   shows in full instead of being cropped away by object-fit:cover:
+   height is set to what the old width-driven box used to compute
+   (107.83% of content height, keeping the same vertical framing/bleed),
+   and width is left to auto-compute from that height via aspect-ratio,
+   growing rightward from the same left edge. */
+.hero__detail[data-n="2"] .hero__detail-photo {
+  top: -2.3438%;
+  left: 9.72%;
+  width: auto;
+  height: 107.83%;
+  aspect-ratio: 3821 / 3651;
 }
 
 /* Stacked exactly on the base photo; fades in on top of it when the
