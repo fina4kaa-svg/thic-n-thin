@@ -1,0 +1,622 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  background: #fff;
+}
+
+/* Always fills the whole window - this is just the backdrop now, separate
+   from the design content below. */
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #eee;
+}
+
+/* Full-bleed background photo. Portrait source rotated 90deg to fill the
+   landscape frame, same as the Figma fill transform. Always sized off the
+   viewport, so it covers the full window width/height with no gaps. */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero__bg img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vh;
+  height: 100vw;
+  transform: translate(-50%, -50%) rotate(90deg);
+  object-fit: cover;
+}
+
+.hero__bg-tint {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* The design group (mint glyph, wordmark, tagline, rail) scales as one
+   proportional unit, independent from the background. Height is always
+   exactly the window height (matches the mint shape to the window at all
+   times); width follows from the original 1440:1024 shape, so on narrow
+   windows the right edge simply gets cropped by .hero's overflow:hidden
+   instead of shrinking the shape down. container-type lets children size
+   type/spacing off this box's own width (cqw) instead of the viewport,
+   so text scales right along with the mint shape and the wordmark image. */
+.hero__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 140.625vh; /* 100vh * 1440 / 1024 */
+  container-type: inline-size;
+  z-index: 1;
+}
+
+/* Left column: mint glyph + tagline. top/bottom: 0 means this always
+   spans the full height of .hero__content. Always overflow:visible -
+   at rest the mint-right piece exactly fills this box (left 30.47% +
+   width 69.53% = 100%, flush with the right edge), so nothing bleeds
+   out when closed; visible needs to stay on permanently (not toggled
+   via [data-detail]) because overflow can't be transitioned - toggling
+   it back to hidden on close would clip the sliding piece mid-animation
+   instead of letting it glide back to its resting position. */
+.hero__logo {
+  position: absolute;
+  top: 0;
+  right: 36.18%;
+  bottom: 0;
+  left: 0;
+  overflow: visible;
+  z-index: 2;
+}
+
+.hero__mint {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  display: block;
+}
+
+.hero__mint--left {
+  left: 0;
+  right: 69.53%;
+  width: 30.47%;
+  opacity: 0.8;
+  transition: opacity 0.45s ease;
+}
+
+.hero__mint--right {
+  left: 30.47%;
+  right: 0;
+  width: 69.53%;
+  background-color: #b6dcd5;
+  -webkit-mask-image: url("assets/vector-right-solid.svg");
+  mask-image: url("assets/vector-right-solid.svg");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  opacity: 0.8;
+  transition: left 0.45s ease, opacity 0.45s ease;
+}
+
+/* Detail view: the right mint piece slides all the way to the right edge;
+   both pieces go fully opaque (they sit above the detail photo in the
+   stacking order - see the z-index scale note above .hero__detail-photo).
+   Same slide/opacity for every detail page. */
+.hero__content[data-detail] .hero__mint--left,
+.hero__content[data-detail] .hero__mint--right {
+  opacity: 1;
+}
+
+.hero__content[data-detail] .hero__mint--right {
+  left: 87.1675%;
+}
+
+/* Horizontal-photo pages (01, 04 - see .hero__detail-photo--horizontal
+   below) are full window height, so they're much wider than the vertical
+   pages (02/03/05) - the mint piece slides further right than the shared
+   87.1675%, but still overlaps and covers part of the photo's right side,
+   same as it does on the vertical pages (same absolute overlap width,
+   just shifted right to account for the wider photo). Both horizontal
+   photos share the same aspect ratio/height, so the same offset covers
+   either one. Tied to the photo's own left position below - if that
+   moves, this needs to move by the same amount (in content-relative
+   terms) to keep the same overlap width. */
+.hero__content[data-detail="1"] .hero__mint--right,
+.hero__content[data-detail="4"] .hero__mint--right {
+  left: 125.7%;
+}
+
+/* Anchored by its top-left corner, which lines up with a corner of the
+   mint vector shape - not stretched to a box, so it scales and sits
+   exactly where it does in the design regardless of window size. */
+.hero__tagline {
+  position: absolute;
+  top: 86.91%;
+  left: 50.05%;
+  margin: 0;
+  font-weight: 400;
+  font-size: 4.4444cqw;
+  line-height: 3.6806cqw;
+  letter-spacing: -0.1333cqw;
+  text-transform: uppercase;
+  color: #000;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+.hero__wordmark-btn {
+  position: absolute;
+  top: 33.59%;
+  right: 59.24%;
+  bottom: 56.84%;
+  left: 4.1%;
+  width: 36.66%;
+  height: 9.57%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.1s ease;
+  z-index: 3;
+}
+
+/* Swift disappear: tagline and wordmark are gone almost instantly once a
+   detail view opens, versus the slower 0.45s slide/reveal on everything
+   coming in. */
+.hero__content[data-detail] .hero__tagline,
+.hero__content[data-detail] .hero__wordmark-btn,
+.hero__content[data-detail] .hero__wordmark-preview {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero__wordmark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: filter 0.15s ease;
+}
+
+/* Wordmark SVG is pure black on transparent, so inverting it flips black
+   straight to white without needing to inline the SVG. */
+.hero__wordmark-btn:hover .hero__wordmark,
+.hero__wordmark-btn:focus-visible .hero__wordmark {
+  filter: invert(1);
+}
+
+.hero__wordmark-preview {
+  position: absolute;
+  top: 46.875%;
+  left: 31.875%;
+  width: 13.4028%;
+  height: 14.1602%;
+  z-index: 4;
+  object-fit: cover;
+  box-shadow: 0.2196cqw 0.2634cqw 0.1756cqw rgba(0, 0, 0, 0.49);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.hero__wordmark-btn:hover + .hero__wordmark-preview,
+.hero__wordmark-btn:focus-visible + .hero__wordmark-preview {
+  opacity: 1;
+}
+
+.hero__rail-item {
+  position: absolute;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 1.6667cqw;
+  letter-spacing: -0.05cqw;
+  text-transform: lowercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: #fff;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.1s ease;
+}
+
+/* Invisible circle over each number, roughly 3x the number's own area, so
+   hovering/clicking near it - not just exactly on the tiny glyph - counts.
+   A pseudo-element still triggers :hover on its parent button, so this
+   doesn't need any extra markup. */
+.hero__rail-item::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.8em;
+  height: 1.8em;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.hero__rail-item[data-n="1"] {
+  top: 3.42%;
+  left: 58.68%;
+}
+
+.hero__rail-item[data-n="1"]:hover {
+  color: #d96c39;
+}
+
+.hero__rail-item[data-n="2"] {
+  top: 22.56%;
+  left: 58.61%;
+}
+
+.hero__rail-item[data-n="2"]:hover {
+  color: #578a85;
+}
+
+.hero__rail-item[data-n="3"] {
+  top: 41.7%;
+  left: 58.61%;
+}
+
+.hero__rail-item[data-n="3"]:hover {
+  color: #000;
+}
+
+.hero__rail-item[data-n="4"] {
+  top: 60.84%;
+  left: 58.61%;
+}
+
+.hero__rail-item[data-n="4"]:hover {
+  color: #263c47;
+}
+
+.hero__rail-item[data-n="5"] {
+  top: 79.98%;
+  left: 58.61%;
+}
+
+.hero__rail-item[data-n="5"]:hover {
+  color: #578a85;
+}
+
+/* Numbers 03/04 sit over the mint area once a detail view is open, so
+   they switch to black to stay legible - same override for every detail
+   panel, since the background layout is identical regardless of which
+   item is active. */
+.hero__content[data-detail] .hero__rail-item[data-n="3"],
+.hero__content[data-detail] .hero__rail-item[data-n="4"] {
+  color: #000;
+}
+
+/* Numbers swiftly disappear (same fast fade as the tagline/wordmark) once
+   the mint opens. The active one stays clickable at the same spot even
+   though it's invisible too, so it can still toggle the view closed. */
+.hero__content[data-detail] .hero__rail-item {
+  opacity: 0;
+}
+
+.hero__content[data-detail="1"] .hero__rail-item:not([data-n="1"]),
+.hero__content[data-detail="2"] .hero__rail-item:not([data-n="2"]),
+.hero__content[data-detail="3"] .hero__rail-item:not([data-n="3"]),
+.hero__content[data-detail="4"] .hero__rail-item:not([data-n="4"]),
+.hero__content[data-detail="5"] .hero__rail-item:not([data-n="5"]) {
+  pointer-events: none;
+}
+
+/* Product preview images - hidden until their number (or its enlarged
+   hover circle above) is hovered or focused. Same position/size/shadow
+   as set in the Figma frame, converted to % of the design so they scale
+   with everything else. */
+.hero__rail-preview {
+  position: absolute;
+  z-index: 4;
+  object-fit: cover;
+  box-shadow: 0.3472cqw 0.4167cqw 0.2778cqw rgba(0, 0, 0, 0.49);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.hero__rail-item[data-n="1"]:hover + .hero__rail-preview,
+.hero__rail-item[data-n="1"]:focus-visible + .hero__rail-preview {
+  opacity: 1;
+}
+
+.hero__rail-item[data-n="2"]:hover + .hero__rail-preview,
+.hero__rail-item[data-n="2"]:focus-visible + .hero__rail-preview {
+  opacity: 1;
+}
+
+.hero__rail-item[data-n="3"]:hover + .hero__rail-preview,
+.hero__rail-item[data-n="3"]:focus-visible + .hero__rail-preview {
+  opacity: 1;
+}
+
+.hero__rail-item[data-n="4"]:hover + .hero__rail-preview,
+.hero__rail-item[data-n="4"]:focus-visible + .hero__rail-preview {
+  opacity: 1;
+}
+
+.hero__rail-item[data-n="5"]:hover + .hero__rail-preview,
+.hero__rail-item[data-n="5"]:focus-visible + .hero__rail-preview {
+  opacity: 1;
+}
+
+.hero__rail-preview[data-n="1"] {
+  top: 2.9102%;
+  left: 61.8785%;
+  width: 10.6181%;
+  height: 11.1719%;
+}
+
+.hero__rail-preview[data-n="2"] {
+  top: 21.8701%;
+  left: 61.993%;
+  width: 8.0972%;
+  height: 15.1465%;
+}
+
+.hero__rail-preview[data-n="3"] {
+  top: 41.1084%;
+  left: 61.993%;
+  width: 8.0972%;
+  height: 15.1465%;
+}
+
+.hero__rail-preview[data-n="4"] {
+  top: 60.5225%;
+  left: 61.875%;
+  width: 10.6944%;
+  height: 11.2793%;
+}
+
+.hero__rail-preview[data-n="5"] {
+  top: 79.292%;
+  left: 61.993%;
+  width: 8.0972%;
+  height: 15.1465%;
+}
+
+/* Detail view content - hidden until its number is clicked (see
+   script.js, which sets data-detail on .hero__content). Positioned/sized
+   straight from the matching Figma frame.
+   z-index scale for the whole page, low to high: hero__bg (0) <
+   hero__detail-photo (1) < hero__logo/mint (2) < hero__wordmark-btn (3) <
+   previews/detail-title (4) < hero__rail-item (5, always stays on top).
+   The mint pieces sit above the photo on purpose, same as the Figma
+   frame. */
+.hero__detail-photo,
+.hero__detail-title {
+  position: absolute;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.hero__detail-photo {
+  top: -2.3438%;
+  left: 9.72%;
+  width: 57.5%;
+  aspect-ratio: 3072 / 4096;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Stacked exactly on the base photo; fades in on top of it when the
+   title is hovered/focused. */
+.hero__detail-photo--alt {
+  opacity: 0;
+}
+
+.hero__detail-title {
+  top: 6.35%;
+  left: 12.71%;
+  font-weight: 400;
+  font-size: 5.5928cqw;
+  color: #fff;
+  white-space: nowrap;
+  z-index: 4;
+  transition: opacity 0.45s ease, color 0.45s ease;
+}
+
+.hero__detail-title:hover,
+.hero__detail-title:focus-visible {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.hero__detail-title:hover ~ .hero__detail-photo--alt,
+.hero__detail-title:focus-visible ~ .hero__detail-photo--alt {
+  opacity: 1;
+}
+
+/* Scoped to each panel by data-n, not just a bare .hero__detail-photo/
+   -title selector - otherwise opening one item's page would also reveal
+   the other item's (hidden) photo/title, since both panels share the
+   same classes. 03 only has a single default photo (no alt/cycle
+   variants), so it doesn't need the :not() exclusion the others use to
+   keep their extra swap images hidden until title-hover. */
+.hero__content[data-detail="1"] .hero__detail[data-n="1"] .hero__detail-photo:not(.hero__detail-photo--cycle),
+.hero__content[data-detail="1"] .hero__detail[data-n="1"] .hero__detail-title,
+.hero__content[data-detail="2"] .hero__detail[data-n="2"] .hero__detail-photo:not(.hero__detail-photo--alt),
+.hero__content[data-detail="2"] .hero__detail[data-n="2"] .hero__detail-title,
+.hero__content[data-detail="3"] .hero__detail[data-n="3"] .hero__detail-photo,
+.hero__content[data-detail="3"] .hero__detail[data-n="3"] .hero__detail-title,
+.hero__content[data-detail="4"] .hero__detail[data-n="4"] .hero__detail-photo:not(.hero__detail-photo--alt),
+.hero__content[data-detail="4"] .hero__detail[data-n="4"] .hero__detail-title,
+.hero__content[data-detail="5"] .hero__detail[data-n="5"] .hero__detail-photo:not(.hero__detail-photo--alt),
+.hero__content[data-detail="5"] .hero__detail[data-n="5"] .hero__detail-title {
+  opacity: 1;
+}
+
+.hero__content[data-detail="1"] .hero__detail[data-n="1"] .hero__detail-title,
+.hero__content[data-detail="2"] .hero__detail[data-n="2"] .hero__detail-title,
+.hero__content[data-detail="3"] .hero__detail[data-n="3"] .hero__detail-title,
+.hero__content[data-detail="4"] .hero__detail[data-n="4"] .hero__detail-title,
+.hero__content[data-detail="5"] .hero__detail[data-n="5"] .hero__detail-title {
+  pointer-events: auto;
+}
+
+/* Landscape (4:3) detail photos - 01 and 04 - fill the full window
+   height instead of being capped to a % of .hero__content's width like
+   the portrait pages (02/03/05) - so they're sized off height +
+   aspect-ratio, with width following automatically (see the
+   .hero__mint--right left override above for the knock-on effect on the
+   mint slide-open distance). Left edge now sits past 0%, into negative
+   territory - it deliberately spills off the left edge of the window
+   (cropped by .hero's own overflow:hidden there) to push the object
+   further left within the visible frame.
+   The mint-left piece isn't a solid rectangle - it has a curved cutout
+   near the bottom-left (see vector-left-solid.svg) where the background
+   texture is meant to show through, not the photo. The photo would poke
+   through that cutout, so it's actually cropped (clip-path), not just
+   repositioned - the bottom-left corner of the photo's own box is cut
+   away so nothing renders there. Shared by class (not scoped to a
+   specific data-n) so any landscape detail photo gets the same
+   treatment. */
+.hero__detail-photo--horizontal {
+  top: 0;
+  left: -3%;
+  width: auto;
+  height: 100%;
+  aspect-ratio: 4000 / 3000;
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
+}
+
+/* Stacked exactly on the base (orange) photo. Default color options,
+   hidden until the title is hovered/focused - see the animations below. */
+.hero__detail-photo--cycle {
+  opacity: 0;
+}
+
+.hero__content[data-detail="1"]:has(.hero__detail-title:hover) .hero__detail-photo--cycle[data-color="teal"],
+.hero__content[data-detail="1"]:has(.hero__detail-title:focus-visible) .hero__detail-photo--cycle[data-color="teal"] {
+  animation: hero-cloud-cycle-teal 2.1s steps(1) infinite;
+}
+
+.hero__content[data-detail="1"]:has(.hero__detail-title:hover) .hero__detail-photo--cycle[data-color="cream"],
+.hero__content[data-detail="1"]:has(.hero__detail-title:focus-visible) .hero__detail-photo--cycle[data-color="cream"] {
+  animation: hero-cloud-cycle-cream 2.1s steps(1) infinite;
+}
+
+.hero__content[data-detail="1"]:has(.hero__detail-title:hover) .hero__detail-photo--cycle[data-color="navy"],
+.hero__content[data-detail="1"]:has(.hero__detail-title:focus-visible) .hero__detail-photo--cycle[data-color="navy"] {
+  animation: hero-cloud-cycle-navy 2.1s steps(1) infinite;
+}
+
+/* Three equal 0.7s slots per loop (same %-boundaries either way, since
+   they're thirds regardless of total duration) - only one color variant
+   opaque at a time, stacked on top of the orange base photo underneath. */
+@keyframes hero-cloud-cycle-teal {
+  0% {
+    opacity: 1;
+  }
+  33.32% {
+    opacity: 1;
+  }
+  33.34% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-cloud-cycle-cream {
+  0% {
+    opacity: 0;
+  }
+  33.32% {
+    opacity: 0;
+  }
+  33.34% {
+    opacity: 1;
+  }
+  66.65% {
+    opacity: 1;
+  }
+  66.67% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-cloud-cycle-navy {
+  0% {
+    opacity: 0;
+  }
+  66.65% {
+    opacity: 0;
+  }
+  66.67% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Back arrow - left of the title, same spot for every detail page (its
+   position matches Figma exactly, and it lines up with the shared
+   .hero__detail-title position/size). Hidden until a detail view is
+   open; clicking it (see script.js) clears data-detail, which is all
+   that's needed to close - the mint slide/opacity and the photo/title
+   opacity already transition smoothly back on their own since they're
+   driven by the same [data-detail] attribute everything else reacts to,
+   so nothing here needs its own close animation. */
+.hero__back-btn {
+  position: absolute;
+  top: 9.315%;
+  left: 3.49%;
+  width: 2.247%;
+  height: 5.493%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.hero__back-btn img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero__content[data-detail] .hero__back-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+

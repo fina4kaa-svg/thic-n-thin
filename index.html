@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Thic n Thin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" type="text/css" href="style.css?v=31" />
+  </head>
+
+  <body>
+    <section class="hero">
+      <div class="hero__bg">
+        <img src="assets/bg-texture.jpg" alt="" />
+        <div class="hero__bg-tint"></div>
+      </div>
+
+      <div class="hero__content">
+        <div class="hero__logo">
+          <img class="hero__mint hero__mint--left" src="assets/vector-left-solid.svg" alt="" />
+          <div class="hero__mint hero__mint--right"></div>
+          <p class="hero__tagline">Weird looks<br />good on you.</p>
+        </div>
+
+        <button type="button" class="hero__wordmark-btn">
+          <img class="hero__wordmark" src="assets/thic-n-thin.svg" alt="Thic n Thin" />
+        </button>
+        <img class="hero__wordmark-preview" src="assets/preview-group.jpg" alt="" aria-hidden="true" />
+
+        <nav class="hero__rail" aria-label="Section index">
+          <button type="button" class="hero__rail-item" data-n="1">01</button>
+          <img class="hero__rail-preview" data-n="1" src="assets/preview-01-cloud.jpg" alt="" aria-hidden="true" />
+
+          <button type="button" class="hero__rail-item" data-n="2">02</button>
+          <img class="hero__rail-preview" data-n="2" src="assets/preview-02-agave.jpg" alt="" aria-hidden="true" />
+
+          <button type="button" class="hero__rail-item" data-n="3">03</button>
+          <img class="hero__rail-preview" data-n="3" src="assets/preview-03-mermaid.jpg" alt="" aria-hidden="true" />
+
+          <button type="button" class="hero__rail-item" data-n="4">04</button>
+          <img class="hero__rail-preview" data-n="4" src="assets/preview-04-heel.jpg" alt="" aria-hidden="true" />
+
+          <button type="button" class="hero__rail-item" data-n="5">05</button>
+          <img class="hero__rail-preview" data-n="5" src="assets/preview-02-lamp.jpg" alt="" aria-hidden="true" />
+        </nav>
+
+        <div class="hero__detail" data-n="1">
+          <h2 class="hero__detail-title" tabindex="0">cloud side table</h2>
+          <img class="hero__detail-photo hero__detail-photo--horizontal" src="assets/detail-01-cloud-orange.jpg" alt="Cloud side table" />
+          <img
+            class="hero__detail-photo hero__detail-photo--horizontal hero__detail-photo--cycle"
+            data-color="teal"
+            src="assets/detail-01-cloud-teal.jpg"
+            alt=""
+            aria-hidden="true"
+          />
+          <img
+            class="hero__detail-photo hero__detail-photo--horizontal hero__detail-photo--cycle"
+            data-color="cream"
+            src="assets/detail-01-cloud-cream.jpg"
+            alt=""
+            aria-hidden="true"
+          />
+          <img
+            class="hero__detail-photo hero__detail-photo--horizontal hero__detail-photo--cycle"
+            data-color="navy"
+            src="assets/detail-01-cloud-navy.jpg"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+
+        <div class="hero__detail" data-n="2">
+          <h2 class="hero__detail-title" tabindex="0">agave chair</h2>
+          <img class="hero__detail-photo" src="assets/detail-02-agave.jpg" alt="Agave chair" />
+          <img
+            class="hero__detail-photo hero__detail-photo--alt"
+            src="assets/detail-02-agave-turned.jpg"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+
+        <div class="hero__detail" data-n="3">
+          <h2 class="hero__detail-title" tabindex="0">mermaid hanger</h2>
+          <img class="hero__detail-photo" src="assets/preview-03-mermaid.jpg" alt="Mermaid hanger" />
+        </div>
+
+        <div class="hero__detail" data-n="4">
+          <h2 class="hero__detail-title" tabindex="0">high heel table and chairs</h2>
+          <img class="hero__detail-photo hero__detail-photo--horizontal" src="assets/detail-04-heel.jpg" alt="High heel table and chairs" />
+          <img
+            class="hero__detail-photo hero__detail-photo--horizontal hero__detail-photo--alt"
+            src="assets/detail-04-heel-chairs.jpg"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+
+        <div class="hero__detail" data-n="5">
+          <h2 class="hero__detail-title" tabindex="0">three-foot lamp</h2>
+          <img class="hero__detail-photo" src="assets/detail-05-lamp.jpg" alt="Three-foot lamp" />
+          <img class="hero__detail-photo hero__detail-photo--alt" src="assets/detail-05-lamp-lit.jpg" alt="" aria-hidden="true" />
+        </div>
+
+        <button type="button" class="hero__back-btn" aria-label="Back to home">
+          <img src="assets/arrow-back.svg" alt="" />
+        </button>
+      </div>
+    </section>
+
+    <script src="script.js?v=3"></script>
+  </body>
+</html>
