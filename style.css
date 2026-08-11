@@ -459,7 +459,7 @@ body {
    growing rightward from the same left edge. */
 .hero__detail[data-n="2"] .hero__detail-photo {
   top: -2.3438%;
-  left: 9.72%;
+  left: 3.2%;
   width: auto;
   height: 107.83%;
   aspect-ratio: 3821 / 3651;
@@ -650,6 +650,14 @@ body {
   display: block;
   width: 100%;
   height: 100%;
+  transition: filter 0.15s ease;
+}
+
+/* Arrow SVG is pure white on transparent, so inverting flips it straight
+   to black - same trick as the wordmark's hover invert above. */
+.hero__back-btn:hover img,
+.hero__back-btn:focus-visible img {
+  filter: invert(1);
 }
 
 .hero__content[data-detail] .hero__back-btn {
