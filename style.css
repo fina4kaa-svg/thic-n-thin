@@ -11,6 +11,10 @@ body {
 body {
   font-family: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
   background: #fff;
+  /* The "t" mark from the logo (assets/logo-mark.svg's own icon glyph,
+     isolated) as the site-wide cursor, hotspot at its top-left corner.
+     Falls back to the normal arrow if the image fails to load. */
+  cursor: url("assets/cursor-t.svg") 0 0, auto;
 }
 
 /* Always fills the whole window - this is just the backdrop now, separate
@@ -183,7 +187,7 @@ body {
   padding: 0;
   border: none;
   background: none;
-  cursor: pointer;
+  cursor: url("assets/cursor-t.svg") 0 0, pointer;
   opacity: 1;
   transition: opacity 0.1s ease;
   z-index: 3;
@@ -247,7 +251,7 @@ body {
   text-decoration: none;
   white-space: nowrap;
   color: #fff;
-  cursor: pointer;
+  cursor: url("assets/cursor-t.svg") 0 0, pointer;
   opacity: 1;
   transition: opacity 0.1s ease, left 0.45s ease;
 }
@@ -641,7 +645,7 @@ body {
   padding: 0;
   border: none;
   background: none;
-  cursor: pointer;
+  cursor: url("assets/cursor-t.svg") 0 0, pointer;
   z-index: 4;
   opacity: 0;
   pointer-events: none;
@@ -689,7 +693,7 @@ body {
   padding: 0;
   border: none;
   background: none;
-  cursor: pointer;
+  cursor: url("assets/cursor-t.svg") 0 0, pointer;
   z-index: 4;
   opacity: 0;
   pointer-events: none;
@@ -900,7 +904,7 @@ body {
   padding: 0;
   margin: 0;
   background: #d9d9d9;
-  cursor: pointer;
+  cursor: url("assets/cursor-t.svg") 0 0, pointer;
   transition: background-color 0.2s ease;
 }
 
