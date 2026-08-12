@@ -109,7 +109,11 @@ document.querySelectorAll(".hero__poster-viewport").forEach((viewport) => {
   const page = viewport.closest(".hero__white-page");
   const pageNumber = page ? page.dataset.n : null;
   const track = viewport.querySelector(".hero__poster-track");
-  const dots = [...viewport.querySelectorAll(".hero__white-dot")];
+  // Excludes the invisible ghost dot rail (see .hero__poster-dots--ghost
+  // in style.css - a CSS-only trick to keep the poster grid centered
+  // despite the real dot rail's width) which would otherwise double the
+  // dot count and break the index-based active/scroll sync below.
+  const dots = [...viewport.querySelectorAll(".hero__poster-dots:not(.hero__poster-dots--ghost) .hero__white-dot")];
   const rows = [...viewport.querySelectorAll(".hero__poster-row")];
   if (!track || dots.length === 0) return;
 

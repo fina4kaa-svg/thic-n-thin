@@ -930,38 +930,43 @@ body {
   width: auto;
 }
 
-/* Poster page (Figma node 808:630). Centered on the window (left:50% +
-   translateX(-50%)) instead of pinned to the frame's own left offset -
-   the viewport's width is auto/shrink-to-fit its two posters instead of
-   a fixed vw guess, so it's always exactly as wide as its content and
-   never clips a poster's edge the way a fixed vw width did at window
-   shapes narrower than the Figma frame's own. Height still comes off
-   that frame's pixel grid (1633x991), same convention as the rest of
-   .hero__white-page's contents: each row is still exactly 64.884vh (a
-   single row's height), so only one row is ever fully visible - but
-   the viewport itself is taller than that, its top pulled up to line
-   up with the back arrow's own bottom edge (9.315% + 5.493% of
-   .hero__content's height, which is always 100vh, so 14.808vh here
-   with no unit conversion needed). The extra height above each row
-   becomes a blank spacer at the top of the scroll track (see
-   .hero__poster-spacer) rather than being distributed into the rows
-   themselves, so a poster's top edge sits below the frame's own top at
-   rest and has to scroll up through that gap first, instead of
-   starting to disappear the instant you scroll at all. The spacer is a
-   real flex child with its own scroll-snap-align:start rather than
-   plain padding on the track, because with mandatory snap, padding
-   alone isn't a valid snap position - the browser immediately
-   corrected any attempt to rest there back up to the first row's own
-   snap point. Making the gap itself a snap target keeps it as a
-   legitimate resting position. */
+/* Poster page (Figma node 808:630). The scroll area is centered in the
+   window on its own - not the scroll area + dots together - via a
+   mirrored, invisible ghost dots column before it (same width as the
+   real one, see .hero__poster-dots--ghost), the classic CSS trick for
+   centering an element that has a fixed-width sidebar to only one
+   side: with justify-content:center on the row, ghost+scroll+dots
+   center as a unit, and because the ghost exactly matches the real
+   dots' width, the scroll area itself (the visual midpoint anyone
+   actually looks at) lands exactly on the window's true center rather
+   than being pulled left by the dots' width. Plain flex centering
+   (left:50%/translateX(-50%) on scroll+dots together) was pulling the
+   posters left of center by roughly half the dots column's width.
+
+   Height still comes off the Figma frame's pixel grid (1633x991), same
+   convention as the rest of .hero__white-page's contents: each row is
+   still exactly 64.884vh (a single row's height), so only one row is
+   ever fully visible - but the viewport itself is taller than that,
+   its top pulled up to line up with the back arrow's own bottom edge
+   (9.315% + 5.493% of .hero__content's height, which is always 100vh,
+   so 14.808vh here with no unit conversion needed). The extra height
+   above each row becomes a blank spacer at the top of the scroll track
+   (see .hero__poster-spacer) rather than being distributed into the
+   rows themselves, so a poster's top edge sits below the frame's own
+   top at rest and has to scroll up through that gap first, instead of
+   starting to disappear the instant you scroll at all - the buffer
+   only softens the scroll gesture, it never moves where a settled row
+   actually renders: every row is exactly one row tall, so whichever
+   one is snapped-to always fills the same fixed rectangle at the
+   bottom of the (taller) viewport, same Y position every time. */
 .hero__poster-viewport {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
   top: 14.808vh;
-  transform: translateX(-50%);
   height: 71.368vh;
   display: flex;
-  align-items: flex-end;
+  justify-content: center;
   gap: 1.8vw;
 }
 
@@ -1025,11 +1030,24 @@ body {
 /* Dot rail to the right of the scroll area, one per row - same
    .hero__white-dot styling as the product galleries' dots, just
    stacked vertically instead of laid out horizontally since this
-   gallery scrolls on the y axis instead of x. */
+   gallery scrolls on the y axis instead of x. Pinned to the bottom of
+   the (taller, buffered) viewport and given the same height as one
+   actual row, so centering the dots inside that box centers them on
+   the poster's own footprint - where it visually sits - rather than on
+   the buffer-inflated viewport, which would pull them upward, off from
+   the posters. */
 .hero__poster-dots {
+  flex: none;
+  align-self: flex-end;
+  height: 64.884vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 0.6vw;
-  flex: none;
+}
+
+.hero__poster-dots--ghost {
+  visibility: hidden;
+  pointer-events: none;
 }
 
