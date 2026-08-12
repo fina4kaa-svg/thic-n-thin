@@ -746,7 +746,8 @@ body {
 .hero__content[data-white="2"] .hero__white-page[data-n="2"],
 .hero__content[data-white="3"] .hero__white-page[data-n="3"],
 .hero__content[data-white="4"] .hero__white-page[data-n="4"],
-.hero__content[data-white="5"] .hero__white-page[data-n="5"] {
+.hero__content[data-white="5"] .hero__white-page[data-n="5"],
+.hero__content[data-white="posters"] .hero__white-page[data-n="posters"] {
   opacity: 1;
   pointer-events: auto;
 }
@@ -762,6 +763,8 @@ body {
    and go permanently black instead of white-by-default/black-on-hover,
    since it's sitting on white instead of a photo now. */
 .hero__content[data-white] .hero__back-btn {
+  opacity: 1;
+  pointer-events: auto;
   z-index: 11;
 }
 
@@ -918,5 +921,58 @@ body {
   bottom: 4.336vh;
   height: 2.6vh;
   width: auto;
+}
+
+/* Poster page (Figma node 808:630). Positioned/sized in vw/vh straight
+   off that frame's own pixel grid (1633x991), same convention as the
+   rest of .hero__white-page's contents. The viewport's height equals a
+   single row's height (two posters side by side), so only one row is
+   visible at a time; scrolling past it scroll-snaps the next row into
+   place instead of landing mid-row - the "fix on every couple of
+   posters" behavior, same scroll-snap mechanism as the product
+   galleries above but on the vertical axis. */
+.hero__poster-viewport {
+  position: absolute;
+  left: 18.494vw;
+  top: 21.292vh;
+  width: 63.074vw;
+  height: 64.884vh;
+  overflow: hidden;
+}
+
+.hero__poster-track {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12.109vh;
+  overflow-y: auto;
+  overflow-anchor: none;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.hero__poster-track::-webkit-scrollbar {
+  display: none;
+}
+
+.hero__poster-row {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7.349vw;
+  scroll-snap-align: start;
+}
+
+/* height + aspect-ratio (not independent vw width / vh height) so the
+   poster's true proportions hold at any window shape instead of only
+   the one the Figma frame happened to be - same fix as the product
+   galleries' viewport above. */
+.hero__poster-row img {
+  flex: none;
+  height: 64.884vh;
+  aspect-ratio: 455 / 643;
+  object-fit: cover;
 }
 

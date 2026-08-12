@@ -37,6 +37,13 @@ if (plusBtn) {
   });
 }
 
+const wordmarkBtn = document.querySelector(".hero__wordmark-btn");
+if (wordmarkBtn) {
+  wordmarkBtn.addEventListener("click", () => {
+    heroContent.dataset.white = "posters";
+  });
+}
+
 document.querySelectorAll(".hero__white-gallery").forEach((gallery) => {
   const page = gallery.closest(".hero__white-page");
   const pageNumber = page ? page.dataset.n : null;
