@@ -17,16 +17,35 @@ railItems.forEach((item) => {
   });
 });
 
+// Populated below by each scrollable gallery/poster grid: {pageNumber,
+// reset}. Letting the back button (and pageshow, for bfcache restores)
+// call these directly - synchronously, at the moment we know for
+// certain the page is closing or being freshly (re)shown - is more
+// reliable than only resetting reactively off a data-white mutation,
+// which depends on the attribute actually changing value and can miss
+// edge cases like a browser back/forward-cache restore replaying the
+// page with data-white already set to the same value it had when the
+// tab was frozen.
+const resettableTracks = [];
+
 const backBtn = document.querySelector(".hero__back-btn");
 if (backBtn) {
   backBtn.addEventListener("click", () => {
     if (heroContent.dataset.white) {
+      const closingPage = heroContent.dataset.white;
       delete heroContent.dataset.white;
+      resettableTracks.forEach(({ pageNumber, reset }) => {
+        if (pageNumber === closingPage) reset();
+      });
     } else {
       delete heroContent.dataset.detail;
     }
   });
 }
+
+window.addEventListener("pageshow", () => {
+  resettableTracks.forEach(({ reset }) => reset());
+});
 
 const plusBtn = document.querySelector(".hero__plus-btn");
 if (plusBtn) {
@@ -56,20 +75,25 @@ document.querySelectorAll(".hero__white-gallery").forEach((gallery) => {
     dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
   };
 
-  // Every time this specific page actually opens (data-white matches
-  // it), snap the track back to the first slide instead of leaving it
+  // Snap the track back to the first slide instead of leaving it
   // wherever it was left last time. Toggling scroll-behavior to "auto"
   // for the reset means it jumps instantly rather than visibly
   // scrolling backwards as the page fades in; scroll-behavior:smooth
   // (CSS) is restored right after for normal dot/swipe navigation.
+  const reset = () => {
+    track.style.scrollBehavior = "auto";
+    track.scrollLeft = 0;
+    track.style.scrollBehavior = "";
+    setActive(0);
+  };
+
   if (pageNumber) {
+    resettableTracks.push({ pageNumber, reset });
+    // Also reset reactively on open, in case this page becomes visible
+    // through some path other than the back button explicitly closing
+    // it (see resettableTracks above for why both exist).
     new MutationObserver(() => {
-      if (heroContent.dataset.white === pageNumber) {
-        track.style.scrollBehavior = "auto";
-        track.scrollLeft = 0;
-        track.style.scrollBehavior = "";
-        setActive(0);
-      }
+      if (heroContent.dataset.white === pageNumber) reset();
     }).observe(heroContent, { attributes: true, attributeFilter: ["data-white"] });
   }
 
@@ -121,14 +145,17 @@ document.querySelectorAll(".hero__poster-viewport").forEach((viewport) => {
     dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
   };
 
+  const reset = () => {
+    track.style.scrollBehavior = "auto";
+    track.scrollTop = 0;
+    track.style.scrollBehavior = "";
+    setActive(0);
+  };
+
   if (pageNumber) {
+    resettableTracks.push({ pageNumber, reset });
     new MutationObserver(() => {
-      if (heroContent.dataset.white === pageNumber) {
-        track.style.scrollBehavior = "auto";
-        track.scrollTop = 0;
-        track.style.scrollBehavior = "";
-        setActive(0);
-      }
+      if (heroContent.dataset.white === pageNumber) reset();
     }).observe(heroContent, { attributes: true, attributeFilter: ["data-white"] });
   }
 
