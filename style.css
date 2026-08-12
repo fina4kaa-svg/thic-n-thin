@@ -803,8 +803,8 @@ body {
   left: 9.66vw;
   right: 3.9vw;
   display: flex;
-  align-items: center;
-  gap: 1.5vw;
+  align-items: flex-start;
+  gap: 2.2vw;
 }
 
 .hero__white-index {
@@ -813,8 +813,16 @@ body {
   flex: none;
 }
 
+/* margin-top nudges the paragraph's own text down to match the glyph
+   ink of the much-larger index number - align-items:center (the
+   previous approach) matched the two elements' box heights, not their
+   actual rendered glyph tops, and a big numeral carries a lot more
+   built-in leading above its ink than a small paragraph line does, so
+   centering the boxes still left the paragraph's first line sitting
+   visibly higher than the number. */
 .hero__white-desc {
   margin: 0;
+  margin-top: 0.56vw;
   font-size: 1.02vw;
   line-height: 1.4;
   color: #263c47;
