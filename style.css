@@ -336,16 +336,16 @@ body {
    different number was always functionally supported, it just wasn't
    visible/clickable to try. */
 .hero__content[data-detail] .hero__rail-item {
-  left: 55.63%;
+  left: 60.4688%;
 }
 
 .hero__content[data-detail="1"] .hero__rail-item,
 .hero__content[data-detail="4"] .hero__rail-item {
-  left: 80.24%;
+  left: 85.0795%;
 }
 
 .hero__content[data-detail="2"] .hero__rail-item {
-  left: 61.9%;
+  left: 66.7418%;
 }
 
 /* Product preview images - hidden until their number (or its enlarged
@@ -844,15 +844,24 @@ body {
   gap: 3.2vh;
 }
 
+/* Fixed height, natural (auto) width per image - matching the Figma
+   gallery frames exactly (every render there shared one height, each
+   at its own different width, not a uniform box). The viewport's own
+   width is set by script.js to match whichever slide is currently
+   active, so the "window" itself resizes as you move between a
+   landscape and a portrait photo instead of either cropping the photo
+   (object-fit:cover) or leaving empty letterbox space around it
+   (object-fit:contain in a fixed-width box). This CSS width is just
+   the pre-JS fallback for the very first paint. */
 .hero__white-gallery-viewport {
   width: 34vw;
   height: 45.14vh;
   overflow: hidden;
+  transition: width 0.3s ease;
 }
 
 .hero__white-gallery-track {
   display: flex;
-  width: 100%;
   height: 100%;
   overflow-x: auto;
   overflow-anchor: none;
@@ -866,8 +875,7 @@ body {
 }
 
 .hero__white-slide {
-  flex: 0 0 100%;
-  width: 100%;
+  flex: 0 0 auto;
   height: 100%;
   display: flex;
   align-items: center;
@@ -877,9 +885,8 @@ body {
 
 .hero__white-slide img {
   display: block;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  height: 100%;
+  width: auto;
 }
 
 .hero__white-dots {
