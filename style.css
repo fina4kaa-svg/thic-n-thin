@@ -312,15 +312,6 @@ body {
   color: #578a85;
 }
 
-/* Numbers 03/04 sit over the mint area once a detail view is open, so
-   they switch to black to stay legible - same override for every detail
-   panel, since the background layout is identical regardless of which
-   item is active. */
-.hero__content[data-detail] .hero__rail-item[data-n="3"],
-.hero__content[data-detail] .hero__rail-item[data-n="4"] {
-  color: #000;
-}
-
 /* Numbers stay visible and clickable once a detail view opens, instead
    of fading away - grouped with the right mint vector by sharing its
    left offset (same three values as .hero__mint--right and
@@ -336,16 +327,16 @@ body {
    different number was always functionally supported, it just wasn't
    visible/clickable to try. */
 .hero__content[data-detail] .hero__rail-item {
-  left: 60.4688%;
+  left: 94.795%;
 }
 
 .hero__content[data-detail="1"] .hero__rail-item,
 .hero__content[data-detail="4"] .hero__rail-item {
-  left: 85.0795%;
+  left: 119.386%;
 }
 
 .hero__content[data-detail="2"] .hero__rail-item {
-  left: 66.7418%;
+  left: 101.069%;
 }
 
 /* Product preview images - hidden until their number (or its enlarged
