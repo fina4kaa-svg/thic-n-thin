@@ -144,17 +144,19 @@ body {
   left: 97%;
 }
 
-/* Horizontal-photo pages (01, 04 - see .hero__detail-photo--horizontal
-   below) are full window height, so they're much wider than the vertical
-   pages (02/03/05) - the mint piece slides further right than the shared
-   87.1675%, but still overlaps and covers part of the photo's right side,
-   same as it does on the vertical pages (same absolute overlap width,
-   just shifted right to account for the wider photo). Both horizontal
-   photos share the same aspect ratio/height, so the same offset covers
-   either one. Tied to the photo's own left position below - if that
-   moves, this needs to move by the same amount (in content-relative
-   terms) to keep the same overlap width. */
+/* Horizontal-photo pages (01, 04, 03 - see .hero__detail-photo--horizontal
+   and .hero__detail-photo--frame below) are full window height, so
+   they're much wider than the vertical pages (02/05) - the mint piece
+   slides further right than the shared 87.1675%, but still overlaps and
+   covers part of the photo's right side, same as it does on the vertical
+   pages (same absolute overlap width, just shifted right to account for
+   the wider photo). All three horizontal photos share the same box
+   height/left position, so the same offset covers all of them. Tied to
+   the photo's own left position below - if that moves, this needs to
+   move by the same amount (in content-relative terms) to keep the same
+   overlap width. */
 .hero__content[data-detail="1"] .hero__mint--right,
+.hero__content[data-detail="3"] .hero__mint--right,
 .hero__content[data-detail="4"] .hero__mint--right {
   left: 125.7%;
 }
@@ -553,6 +555,50 @@ body {
   aspect-ratio: 4000 / 3000;
   -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
+}
+
+/* Mermaid (03) - same horizontal box shape as 01/04 above, but its
+   source photo is a portrait shot with both the tail fork (top) and
+   the vase body (bottom) in one frame, rather than a separate landscape
+   photo per pose. Instead of cropping to one or the other with
+   object-fit, the frame clips to the horizontal box (same shape as
+   .hero__detail-photo--horizontal, including the same corner cutout)
+   and the actual photo inside it is sized to fill the frame's width,
+   overflowing well past its height - then slid vertically with
+   transform so the frame acts like a window onto one portion of it.
+   Default rests on the bottom (vase); hovering the title slides it up
+   to the top (tail fork). Height math: frame is 100vh tall and
+   100vh*(4/3) = 133.333vh wide (matching --horizontal's own 4:3 box);
+   the photo is set to that same width, and at its own 900:1200 aspect
+   ratio that makes it 133.333vh * (1200/900) = 177.778vh tall - 77.778vh
+   taller than the frame, which is exactly how far it travels between
+   the two resting positions. */
+.hero__detail-photo--frame {
+  top: 0;
+  left: -3%;
+  width: auto;
+  height: 100%;
+  aspect-ratio: 4000 / 3000;
+  overflow: hidden;
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
+}
+
+.hero__detail-photo--pan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 900 / 1200;
+  object-fit: cover;
+  transform: translateY(-77.778vh);
+  transition: transform 0.6s ease;
+}
+
+.hero__content[data-detail="3"]:has(.hero__detail-title:hover) .hero__detail-photo--pan,
+.hero__content[data-detail="3"]:has(.hero__detail-title:focus-visible) .hero__detail-photo--pan {
+  transform: translateY(0);
 }
 
 /* Stacked exactly on the base (orange) photo. Default color options,
