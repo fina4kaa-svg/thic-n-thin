@@ -930,20 +930,31 @@ body {
    never clips a poster's edge the way a fixed vw width did at window
    shapes narrower than the Figma frame's own. Height still comes off
    that frame's pixel grid (1633x991), same convention as the rest of
-   .hero__white-page's contents: it equals a single row's height (two
-   posters side by side), so only one row is visible at a time -
-   scrolling past it scroll-snaps the next row into place instead of
-   landing mid-row, the "fix on every couple of posters" behavior, same
-   scroll-snap mechanism as the product galleries above but on the
-   vertical axis. */
+   .hero__white-page's contents: each row is still exactly 64.884vh (a
+   single row's height), so only one row is ever fully visible - but
+   the viewport itself is taller than that, its top pulled up to line
+   up with the back arrow's own bottom edge (9.315% + 5.493% of
+   .hero__content's height, which is always 100vh, so 14.808vh here
+   with no unit conversion needed). The extra height above each row
+   becomes a blank spacer at the top of the scroll track (see
+   .hero__poster-spacer) rather than being distributed into the rows
+   themselves, so a poster's top edge sits below the frame's own top at
+   rest and has to scroll up through that gap first, instead of
+   starting to disappear the instant you scroll at all. The spacer is a
+   real flex child with its own scroll-snap-align:start rather than
+   plain padding on the track, because with mandatory snap, padding
+   alone isn't a valid snap position - the browser immediately
+   corrected any attempt to rest there back up to the first row's own
+   snap point. Making the gap itself a snap target keeps it as a
+   legitimate resting position. */
 .hero__poster-viewport {
   position: absolute;
   left: 50%;
-  top: 21.292vh;
+  top: 14.808vh;
   transform: translateX(-50%);
-  height: 64.884vh;
+  height: 71.368vh;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 1.8vw;
 }
 
@@ -956,7 +967,6 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: 12.109vh;
   overflow-y: auto;
   overflow-anchor: none;
   scroll-snap-type: y mandatory;
@@ -968,8 +978,24 @@ body {
   display: none;
 }
 
+.hero__poster-spacer {
+  flex: 0 0 6.484vh;
+  scroll-snap-align: start;
+}
+
+/* Row-to-row gap as a sibling margin instead of `gap` on the track, so
+   it applies only between rows - a track-level gap would also land
+   between the spacer and the first row, adding unwanted extra space on
+   top of the spacer's own deliberate height. */
+.hero__poster-row + .hero__poster-row {
+  margin-top: 12.109vh;
+}
+
+/* Explicit row height (not flex:0 0 100%) - 100% would mean 100% of
+   the track's own height, which is now taller than a single row (see
+   .hero__poster-spacer above), not one row's worth. */
 .hero__poster-row {
-  flex: 0 0 100%;
+  flex: 0 0 64.884vh;
   display: flex;
   align-items: center;
   gap: 7.349vw;
