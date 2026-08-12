@@ -36,3 +36,24 @@ if (plusBtn) {
     heroContent.dataset.white = n;
   });
 }
+
+document.querySelectorAll(".hero__white-gallery").forEach((gallery) => {
+  const track = gallery.querySelector(".hero__white-gallery-track");
+  const dots = [...gallery.querySelectorAll(".hero__white-dot")];
+  if (!track || dots.length === 0) return;
+
+  const setActive = (index) => {
+    dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
+  };
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      track.scrollTo({ left: track.clientWidth * i, behavior: "smooth" });
+    });
+  });
+
+  track.addEventListener("scroll", () => {
+    const index = Math.round(track.scrollLeft / track.clientWidth);
+    setActive(index);
+  });
+});
