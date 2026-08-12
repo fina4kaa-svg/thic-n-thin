@@ -764,13 +764,13 @@ body {
 
 .hero__content[data-white] .hero__back-btn img {
   filter: invert(1);
-  opacity: 0.55;
+  opacity: 1;
   transition: filter 0.15s ease, opacity 0.15s ease;
 }
 
 .hero__content[data-white] .hero__back-btn:hover img,
 .hero__content[data-white] .hero__back-btn:focus-visible img {
-  opacity: 1;
+  opacity: 0.55;
 }
 
 /* White page content (Figma node 776:320). .hero__white-page is
@@ -829,7 +829,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2vh;
+  gap: 3.2vh;
 }
 
 .hero__white-gallery-viewport {
