@@ -764,6 +764,13 @@ body {
 
 .hero__content[data-white] .hero__back-btn img {
   filter: invert(1);
+  opacity: 0.55;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+.hero__content[data-white] .hero__back-btn:hover img,
+.hero__content[data-white] .hero__back-btn:focus-visible img {
+  opacity: 1;
 }
 
 /* White page content (Figma node 776:320). .hero__white-page is
@@ -771,13 +778,19 @@ body {
    inside it is positioned in vw/vh off the window itself rather than
    the usual %-of-.hero__content - the two systems would otherwise
    disagree on wide windows where content is narrower than the window. */
+/* Vertically centered on the back button's own center line (top:9.315%
+   + height:5.493%/2 of .hero__content's height, which is always 100vh
+   regardless of window width) - the 기준/reference point - rather than
+   baseline-aligned, which let the much-larger index number visually
+   drift off the row's true center. */
 .hero__white-top {
   position: absolute;
-  top: 10.9vh;
+  top: 12.0615vh;
+  transform: translateY(-50%);
   left: 9.66vw;
   right: 3.9vw;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1.5vw;
 }
 
@@ -811,7 +824,8 @@ body {
 .hero__white-gallery {
   position: absolute;
   top: 31.67vh;
-  left: 37.63vw;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -874,6 +888,6 @@ body {
 }
 
 .hero__white-dot.is-active {
-  background: #000;
+  background: #263c47;
 }
 
