@@ -674,9 +674,8 @@ body {
    63.82% of content) plus the constant ~3.19-point offset measured
    from the Figma frame between the vector's left edge and the button.
    Positioned by its own center (left/top mark the center point, plus
-   translate(-50%,-50%)) rather than top-left corner, so the grow
-   animation on click can scale outward from a fixed point instead of
-   drifting as width/height change. */
+   translate(-50%,-50%)) purely so the two coordinate systems (top-left
+   vs. center) don't have to be reconciled by hand elsewhere. */
 .hero__plus-btn {
   position: absolute;
   top: 38.0615%;
@@ -691,7 +690,7 @@ body {
   z-index: 4;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.45s ease, width 0.6s cubic-bezier(0.65, 0, 0.35, 1), height 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  transition: opacity 0.45s ease;
 }
 
 .hero__plus-icon {
@@ -721,32 +720,23 @@ body {
   left: 66.7418%;
 }
 
-/* Clicking the plus (see script.js) grows it - centered on the same
-   fixed point - until its white cross bars flood past the edges of
-   the viewport. .hero__white-page then fades in right as that finishes
-   (see the transitionend listener in script.js), so the flood and the
-   page's own white background read as one continuous motion instead
-   of a cut. vmax rather than a fixed transform:scale() so it reliably
-   covers the screen regardless of viewport size/aspect ratio. */
-.hero__plus-btn.is-growing {
-  width: 300vmax;
-  height: 300vmax;
-  pointer-events: none;
-}
-
 /* One white page per product, not a shared overlay - each is its own
    space for that product's content, kept distinct via data-n like the
-   detail panels. Sits above everything (z-index scale tops out at 5
-   for .hero__rail-item) so it fully occludes the page underneath, both
-   visually and for clicks. */
+   detail panels. Clicking plus (see script.js) just fades it straight
+   in - position:fixed + inset:0 so it covers the full browser window
+   edge to edge, not just .hero__content's own (narrower, on wide
+   windows) box - otherwise a strip of the page behind stays visible
+   instead of the whole window turning white. Sits above everything
+   (z-index scale tops out at 5 for .hero__rail-item) so it fully
+   occludes the page underneath, both visually and for clicks. */
 .hero__white-page {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: #fff;
   z-index: 10;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .hero__content[data-white="1"] .hero__white-page[data-n="1"],
