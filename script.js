@@ -101,3 +101,49 @@ document.querySelectorAll(".hero__white-gallery").forEach((gallery) => {
     setActive(closest);
   });
 });
+
+// Poster page dot rail - same offsetTop/scrollTop-driven sync as the
+// product galleries above, just on the vertical axis since this one
+// scrolls by row instead of by single slide.
+document.querySelectorAll(".hero__poster-viewport").forEach((viewport) => {
+  const page = viewport.closest(".hero__white-page");
+  const pageNumber = page ? page.dataset.n : null;
+  const track = viewport.querySelector(".hero__poster-track");
+  const dots = [...viewport.querySelectorAll(".hero__white-dot")];
+  const rows = [...viewport.querySelectorAll(".hero__poster-row")];
+  if (!track || dots.length === 0) return;
+
+  const setActive = (index) => {
+    dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
+  };
+
+  if (pageNumber) {
+    new MutationObserver(() => {
+      if (heroContent.dataset.white === pageNumber) {
+        track.style.scrollBehavior = "auto";
+        track.scrollTop = 0;
+        track.style.scrollBehavior = "";
+        setActive(0);
+      }
+    }).observe(heroContent, { attributes: true, attributeFilter: ["data-white"] });
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      track.scrollTo({ top: rows[i].offsetTop });
+    });
+  });
+
+  track.addEventListener("scroll", () => {
+    let closest = 0;
+    let closestDist = Infinity;
+    rows.forEach((row, i) => {
+      const dist = Math.abs(row.offsetTop - track.scrollTop);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = i;
+      }
+    });
+    setActive(closest);
+  });
+});

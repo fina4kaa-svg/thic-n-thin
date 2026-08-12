@@ -923,20 +923,32 @@ body {
   width: auto;
 }
 
-/* Poster page (Figma node 808:630). Positioned/sized in vw/vh straight
-   off that frame's own pixel grid (1633x991), same convention as the
-   rest of .hero__white-page's contents. The viewport's height equals a
-   single row's height (two posters side by side), so only one row is
-   visible at a time; scrolling past it scroll-snaps the next row into
-   place instead of landing mid-row - the "fix on every couple of
-   posters" behavior, same scroll-snap mechanism as the product
-   galleries above but on the vertical axis. */
+/* Poster page (Figma node 808:630). Centered on the window (left:50% +
+   translateX(-50%)) instead of pinned to the frame's own left offset -
+   the viewport's width is auto/shrink-to-fit its two posters instead of
+   a fixed vw guess, so it's always exactly as wide as its content and
+   never clips a poster's edge the way a fixed vw width did at window
+   shapes narrower than the Figma frame's own. Height still comes off
+   that frame's pixel grid (1633x991), same convention as the rest of
+   .hero__white-page's contents: it equals a single row's height (two
+   posters side by side), so only one row is visible at a time -
+   scrolling past it scroll-snaps the next row into place instead of
+   landing mid-row, the "fix on every couple of posters" behavior, same
+   scroll-snap mechanism as the product galleries above but on the
+   vertical axis. */
 .hero__poster-viewport {
   position: absolute;
-  left: 18.494vw;
+  left: 50%;
   top: 21.292vh;
-  width: 63.074vw;
+  transform: translateX(-50%);
   height: 64.884vh;
+  display: flex;
+  align-items: center;
+  gap: 1.8vw;
+}
+
+.hero__poster-scroll {
+  height: 100%;
   overflow: hidden;
 }
 
@@ -960,7 +972,6 @@ body {
   flex: 0 0 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 7.349vw;
   scroll-snap-align: start;
 }
@@ -968,11 +979,24 @@ body {
 /* height + aspect-ratio (not independent vw width / vh height) so the
    poster's true proportions hold at any window shape instead of only
    the one the Figma frame happened to be - same fix as the product
-   galleries' viewport above. */
+   galleries' viewport above. Box already matches the poster's own
+   aspect ratio exactly, so object-fit:cover never actually crops -
+   it's just a safety net against rounding. */
 .hero__poster-row img {
   flex: none;
   height: 64.884vh;
   aspect-ratio: 455 / 643;
   object-fit: cover;
+}
+
+/* Dot rail to the right of the scroll area, one per row - same
+   .hero__white-dot styling as the product galleries' dots, just
+   stacked vertically instead of laid out horizontally since this
+   gallery scrolls on the y axis instead of x. */
+.hero__poster-dots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vw;
+  flex: none;
 }
 
