@@ -881,7 +881,11 @@ body {
    actual rendered glyph tops, and a big numeral carries a lot more
    built-in leading above its ink than a small paragraph line does, so
    centering the boxes still left the paragraph's first line sitting
-   visibly higher than the number. */
+   visibly higher than the number. This offset was calibrated against
+   two-line descriptions (every page but 04) - a one-line box is short
+   enough that the same fixed nudge overshoots and leaves it sitting
+   near the number's top instead of centered against it, so 04 gets
+   its own plain center-aligned override below instead. */
 .hero__white-desc {
   margin: 0;
   margin-top: 0.56vw;
@@ -889,6 +893,17 @@ body {
   line-height: 1.4;
   color: #263c47;
   max-width: 42vw;
+}
+
+/* 04's description is short enough to stay on one line - see the
+   comment above .hero__white-desc for why that needs plain centering
+   instead of the ink-matching nudge the two-line pages use. */
+.hero__white-page[data-n="4"] .hero__white-top {
+  align-items: center;
+}
+
+.hero__white-page[data-n="4"] .hero__white-desc {
+  margin-top: 0;
 }
 
 .hero__white-purchase {
