@@ -249,7 +249,7 @@ body {
   color: #fff;
   cursor: pointer;
   opacity: 1;
-  transition: opacity 0.1s ease;
+  transition: opacity 0.1s ease, left 0.45s ease;
 }
 
 /* Invisible circle over each number, roughly 3x the number's own area, so
@@ -321,19 +321,31 @@ body {
   color: #000;
 }
 
-/* Numbers swiftly disappear (same fast fade as the tagline/wordmark) once
-   the mint opens. The active one stays clickable at the same spot even
-   though it's invisible too, so it can still toggle the view closed. */
+/* Numbers stay visible and clickable once a detail view opens, instead
+   of fading away - grouped with the right mint vector by sharing its
+   left offset (same three values as .hero__mint--right and
+   .hero__plus-btn above: shared for vertical pages, wider for
+   horizontal 01/04, agave's own extended-photo value), so they slide
+   as one visual unit with it. That's what makes clicking a different
+   number work as direct product-to-product navigation instead of just
+   a close button: the click handler in script.js already just swaps
+   data-detail straight from one value to another (no closing step),
+   so the mint/numbers slide to the new page's offset and the new
+   panel's photo/title fade in via the same [data-detail="N"] rules
+   that already drive every other page transition - clicking a
+   different number was always functionally supported, it just wasn't
+   visible/clickable to try. */
 .hero__content[data-detail] .hero__rail-item {
-  opacity: 0;
+  left: 55.63%;
 }
 
-.hero__content[data-detail="1"] .hero__rail-item:not([data-n="1"]),
-.hero__content[data-detail="2"] .hero__rail-item:not([data-n="2"]),
-.hero__content[data-detail="3"] .hero__rail-item:not([data-n="3"]),
-.hero__content[data-detail="4"] .hero__rail-item:not([data-n="4"]),
-.hero__content[data-detail="5"] .hero__rail-item:not([data-n="5"]) {
-  pointer-events: none;
+.hero__content[data-detail="1"] .hero__rail-item,
+.hero__content[data-detail="4"] .hero__rail-item {
+  left: 80.24%;
+}
+
+.hero__content[data-detail="2"] .hero__rail-item {
+  left: 61.9%;
 }
 
 /* Product preview images - hidden until their number (or its enlarged
@@ -845,6 +857,7 @@ body {
   overflow-x: auto;
   overflow-anchor: none;
   scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
   scrollbar-width: none;
 }
 

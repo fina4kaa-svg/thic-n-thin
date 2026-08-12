@@ -40,6 +40,7 @@ if (plusBtn) {
 document.querySelectorAll(".hero__white-gallery").forEach((gallery) => {
   const track = gallery.querySelector(".hero__white-gallery-track");
   const dots = [...gallery.querySelectorAll(".hero__white-dot")];
+  const slides = [...gallery.querySelectorAll(".hero__white-slide")];
   if (!track || dots.length === 0) return;
 
   const setActive = (index) => {
@@ -48,12 +49,29 @@ document.querySelectorAll(".hero__white-gallery").forEach((gallery) => {
 
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
-      track.scrollTo({ left: track.clientWidth * i, behavior: "smooth" });
+      // Each slide's own offsetLeft, not clientWidth * i - the two can be
+      // a fraction of a pixel apart (vw-based widths vs. the browser's own
+      // integer-rounded offsetLeft), which was enough drift to land the
+      // scroll position just short of the slide boundary and leave a
+      // sliver of the neighboring image visible along one edge. Smoothness
+      // comes from the track's own scroll-behavior:smooth (CSS) instead of
+      // the behavior:"smooth" option here, so there's a single scrolling
+      // system driving the animation instead of the JS animation and the
+      // browser's native scroll-snap potentially disagreeing mid-transition.
+      track.scrollTo({ left: slides[i].offsetLeft });
     });
   });
 
   track.addEventListener("scroll", () => {
-    const index = Math.round(track.scrollLeft / track.clientWidth);
-    setActive(index);
+    let closest = 0;
+    let closestDist = Infinity;
+    slides.forEach((slide, i) => {
+      const dist = Math.abs(slide.offsetLeft - track.scrollLeft);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = i;
+      }
+    });
+    setActive(closest);
   });
 });
