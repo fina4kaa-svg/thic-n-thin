@@ -56,6 +56,25 @@ if (plusBtn) {
   });
 }
 
+// Product name doubles as another way into the same white/render page the
+// plus button opens - it's already focusable/hoverable for the alt-photo
+// swap (see .hero__detail-title in style.css), so this just adds the same
+// dataset.white = n the plus button does, plus Enter/Space since it's a
+// heading rather than a real <button> element.
+detailPanels.forEach((panel) => {
+  const title = panel.querySelector(".hero__detail-title");
+  if (!title) return;
+  const openWhite = () => {
+    heroContent.dataset.white = panel.dataset.n;
+  };
+  title.addEventListener("click", openWhite);
+  title.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    openWhite();
+  });
+});
+
 const wordmarkBtn = document.querySelector(".hero__wordmark-btn");
 if (wordmarkBtn) {
   wordmarkBtn.addEventListener("click", () => {
