@@ -59,7 +59,52 @@ if (plusBtn) {
 const wordmarkBtn = document.querySelector(".hero__wordmark-btn");
 if (wordmarkBtn) {
   wordmarkBtn.addEventListener("click", () => {
+    heroContent.dataset.white = "about";
+  });
+}
+
+const aboutNavBtn = document.querySelector(".hero__white-nav-link--about");
+if (aboutNavBtn) {
+  aboutNavBtn.addEventListener("click", () => {
+    heroContent.dataset.white = "about";
+  });
+}
+
+const summerBtn = document.querySelector(".hero__white-nav-link--summer");
+if (summerBtn) {
+  summerBtn.addEventListener("click", () => {
     heroContent.dataset.white = "posters";
+  });
+}
+
+// About page scrolls internally (see .hero__white-page[data-n="about"] in
+// style.css) rather than having a single fixed layout like the product/
+// poster pages, so it needs the same reset-to-top treatment those pages'
+// internal galleries get - otherwise reopening it (or coming back via the
+// back button) would leave it wherever the user last scrolled to.
+const aboutPage = document.querySelector('.hero__white-page[data-n="about"]');
+if (aboutPage) {
+  const reset = () => {
+    aboutPage.style.scrollBehavior = "auto";
+    aboutPage.scrollTop = 0;
+    aboutPage.style.scrollBehavior = "";
+  };
+  resettableTracks.push({ pageNumber: "about", reset });
+  new MutationObserver(() => {
+    if (heroContent.dataset.white === "about") reset();
+  }).observe(heroContent, { attributes: true, attributeFilter: ["data-white"] });
+
+  // Fades the back triangle and the about/summer-2026 nav down to partial
+  // opacity once the about page has scrolled past its header photo, so
+  // they don't sit fully solid over the collage underneath - see
+  // .hero__content.is-about-scrolled in style.css. The class goes on
+  // heroContent (not just the nav) so both elements can react to one
+  // shared state. Only the about page scrolls this way (the poster
+  // page's own scroll is internal to its row track, not the page
+  // itself), so this listener is scoped to aboutPage rather than being
+  // a global thing.
+  aboutPage.addEventListener("scroll", () => {
+    heroContent.classList.toggle("is-about-scrolled", aboutPage.scrollTop > 40);
   });
 }
 
