@@ -23,3 +23,28 @@ if (backBtn) {
     delete heroContent.dataset.detail;
   });
 }
+
+const plusBtn = document.querySelector(".hero__plus-btn");
+if (plusBtn) {
+  plusBtn.addEventListener("click", () => {
+    const n = heroContent.dataset.detail;
+    if (!n || plusBtn.classList.contains("is-growing")) return;
+
+    plusBtn.classList.add("is-growing");
+    plusBtn.addEventListener(
+      "transitionend",
+      () => {
+        heroContent.dataset.white = n;
+      },
+      { once: true }
+    );
+  });
+}
+
+const whiteBackBtns = document.querySelectorAll(".hero__white-page[data-n] .hero__white-back-btn");
+whiteBackBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    delete heroContent.dataset.white;
+    plusBtn.classList.remove("is-growing");
+  });
+});

@@ -495,14 +495,13 @@ body {
 /* Scoped to each panel by data-n, not just a bare .hero__detail-photo/
    -title selector - otherwise opening one item's page would also reveal
    the other item's (hidden) photo/title, since both panels share the
-   same classes. 03 only has a single default photo (no alt/cycle
-   variants), so it doesn't need the :not() exclusion the others use to
-   keep their extra swap images hidden until title-hover. */
+   same classes. Every panel now has an alt/cycle swap image, so they
+   all need the :not() exclusion to keep it hidden until title-hover. */
 .hero__content[data-detail="1"] .hero__detail[data-n="1"] .hero__detail-photo:not(.hero__detail-photo--cycle),
 .hero__content[data-detail="1"] .hero__detail[data-n="1"] .hero__detail-title,
 .hero__content[data-detail="2"] .hero__detail[data-n="2"] .hero__detail-photo:not(.hero__detail-photo--alt),
 .hero__content[data-detail="2"] .hero__detail[data-n="2"] .hero__detail-title,
-.hero__content[data-detail="3"] .hero__detail[data-n="3"] .hero__detail-photo,
+.hero__content[data-detail="3"] .hero__detail[data-n="3"] .hero__detail-photo:not(.hero__detail-photo--alt),
 .hero__content[data-detail="3"] .hero__detail[data-n="3"] .hero__detail-title,
 .hero__content[data-detail="4"] .hero__detail[data-n="4"] .hero__detail-photo:not(.hero__detail-photo--alt),
 .hero__content[data-detail="4"] .hero__detail[data-n="4"] .hero__detail-title,
@@ -663,5 +662,127 @@ body {
 .hero__content[data-detail] .hero__back-btn {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Plus button - positioned relative to the right mint vector (Figma
+   node 643:241/773:261), not a fixed content-relative spot, since the
+   vector itself sits at a different left offset depending on the page
+   (see the .hero__mint--right rules above: shared 87.1675% for
+   vertical pages, 125.7% for horizontal 01/04, 90.5%/97% for agave's
+   extended photo). Each override below is that same mint-right left
+   value converted to a content-relative % (× the .hero__logo width,
+   63.82% of content) plus the constant ~3.19-point offset measured
+   from the Figma frame between the vector's left edge and the button.
+   Positioned by its own center (left/top mark the center point, plus
+   translate(-50%,-50%)) rather than top-left corner, so the grow
+   animation on click can scale outward from a fixed point instead of
+   drifting as width/height change. */
+.hero__plus-btn {
+  position: absolute;
+  top: 38.0615%;
+  width: 3.2986%;
+  height: 4.6387%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease, width 0.6s cubic-bezier(0.65, 0, 0.35, 1), height 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hero__plus-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: filter 0.15s ease;
+}
+
+.hero__plus-btn:hover .hero__plus-icon,
+.hero__plus-btn:focus-visible .hero__plus-icon {
+  filter: invert(1);
+}
+
+.hero__content[data-detail] .hero__plus-btn {
+  opacity: 1;
+  pointer-events: auto;
+  left: 60.4688%;
+}
+
+.hero__content[data-detail="1"] .hero__plus-btn,
+.hero__content[data-detail="4"] .hero__plus-btn {
+  left: 85.0795%;
+}
+
+.hero__content[data-detail="2"] .hero__plus-btn {
+  left: 66.7418%;
+}
+
+/* Clicking the plus (see script.js) grows it - centered on the same
+   fixed point - until its white cross bars flood past the edges of
+   the viewport. .hero__white-page then fades in right as that finishes
+   (see the transitionend listener in script.js), so the flood and the
+   page's own white background read as one continuous motion instead
+   of a cut. vmax rather than a fixed transform:scale() so it reliably
+   covers the screen regardless of viewport size/aspect ratio. */
+.hero__plus-btn.is-growing {
+  width: 300vmax;
+  height: 300vmax;
+  pointer-events: none;
+}
+
+/* One white page per product, not a shared overlay - each is its own
+   space for that product's content, kept distinct via data-n like the
+   detail panels. Sits above everything (z-index scale tops out at 5
+   for .hero__rail-item) so it fully occludes the page underneath, both
+   visually and for clicks. */
+.hero__white-page {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.hero__content[data-white="1"] .hero__white-page[data-n="1"],
+.hero__content[data-white="2"] .hero__white-page[data-n="2"],
+.hero__content[data-white="3"] .hero__white-page[data-n="3"],
+.hero__content[data-white="4"] .hero__white-page[data-n="4"],
+.hero__content[data-white="5"] .hero__white-page[data-n="5"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero__white-back-btn {
+  position: absolute;
+  top: 9.315%;
+  left: 3.49%;
+  width: 2.247%;
+  height: 5.493%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.hero__white-back-btn img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Back arrow is white by default (for use over photos) - permanently
+     inverted to black here since it sits on a plain white page. */
+  filter: invert(1);
+  transition: opacity 0.15s ease;
+}
+
+.hero__white-back-btn:hover img,
+.hero__white-back-btn:focus-visible img {
+  opacity: 0.6;
 }
 
