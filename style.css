@@ -975,10 +975,19 @@ body {
   overflow: hidden;
 }
 
+/* scroll-padding-top shifts EVERY row's own scroll-snap-align:start
+   target inward by the spacer's height, not just the first row's -
+   without it, only row 1 rests at the position defined by the spacer
+   (see .hero__poster-spacer below); every row after it has nothing
+   pushing it down and snaps flush to the viewport's own top edge
+   instead, landing visibly higher than row 1 did. With this, every
+   row's top lands at the same Y position: (viewport top + this value),
+   matching row 1's spacer-derived rest position exactly. */
 .hero__poster-track {
   display: flex;
   flex-direction: column;
   height: 100%;
+  scroll-padding-top: 6.484vh;
   overflow-y: auto;
   overflow-anchor: none;
   scroll-snap-type: y mandatory;
