@@ -20,7 +20,11 @@ railItems.forEach((item) => {
 const backBtn = document.querySelector(".hero__back-btn");
 if (backBtn) {
   backBtn.addEventListener("click", () => {
-    delete heroContent.dataset.detail;
+    if (heroContent.dataset.white) {
+      delete heroContent.dataset.white;
+    } else {
+      delete heroContent.dataset.detail;
+    }
   });
 }
 
@@ -32,10 +36,3 @@ if (plusBtn) {
     heroContent.dataset.white = n;
   });
 }
-
-const whiteBackBtns = document.querySelectorAll(".hero__white-page[data-n] .hero__white-back-btn");
-whiteBackBtns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    delete heroContent.dataset.white;
-  });
-});

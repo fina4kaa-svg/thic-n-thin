@@ -748,31 +748,21 @@ body {
   pointer-events: auto;
 }
 
-.hero__white-back-btn {
-  position: absolute;
-  top: 9.315%;
-  left: 3.49%;
-  width: 2.247%;
-  height: 5.493%;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
+/* The white page reuses .hero__back-btn instead of having its own copy,
+   so it's guaranteed to sit at the exact same spot/shape rather than
+   drifting - a second button positioned as a percentage of the white
+   page (position:fixed, full viewport) instead of .hero__content (which
+   is narrower than the viewport on wide windows) landed in a visibly
+   different place. data-detail stays set the whole time the white page
+   is open (see script.js), so .hero__back-btn is already visible from
+   the rule above - just needs to jump above the white page's z-index
+   and go permanently black instead of white-by-default/black-on-hover,
+   since it's sitting on white instead of a photo now. */
+.hero__content[data-white] .hero__back-btn {
+  z-index: 11;
 }
 
-.hero__white-back-btn img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* Back arrow is white by default (for use over photos) - permanently
-     inverted to black here since it sits on a plain white page. */
+.hero__content[data-white] .hero__back-btn img {
   filter: invert(1);
-  transition: opacity 0.15s ease;
-}
-
-.hero__white-back-btn:hover img,
-.hero__white-back-btn:focus-visible img {
-  opacity: 0.6;
 }
 
