@@ -40,40 +40,28 @@ if (plusBtn) {
 document.querySelectorAll(".hero__white-gallery").forEach((gallery) => {
   const page = gallery.closest(".hero__white-page");
   const pageNumber = page ? page.dataset.n : null;
-  const viewport = gallery.querySelector(".hero__white-gallery-viewport");
   const track = gallery.querySelector(".hero__white-gallery-track");
   const dots = [...gallery.querySelectorAll(".hero__white-dot")];
   const slides = [...gallery.querySelectorAll(".hero__white-slide")];
-  if (!track || !viewport || dots.length === 0) return;
+  if (!track || dots.length === 0) return;
 
-  // Every slide is height:100%/width:auto (see style.css), so each one's
-  // offsetWidth is already its own natural, height-constrained width -
-  // same height as every other slide, width varying per photo, matching
-  // the Figma gallery frames. The viewport has no fixed width of its own
-  // (past the initial-paint fallback); it's resized here to whichever
-  // slide is active, so the visible "window" frames each photo at its
-  // own true proportions instead of stretching/cropping or leaving
-  // empty space around it.
-  let activeIndex = 0;
   const setActive = (index) => {
-    activeIndex = index;
     dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
-    const slide = slides[index];
-    if (slide) viewport.style.width = slide.offsetWidth + "px";
   };
 
-  setActive(0);
-
-  // Re-measure every time this specific page actually opens, not just
-  // once at page load - offsetWidth read too early (before an image's
-  // dimensions are resolved, or before the page's own layout settles)
-  // can come back wrong, and nothing was ever correcting it afterward.
-  // Watching data-white directly means this re-syncs on every open, so
-  // it's self-healing regardless of image load/cache timing.
+  // Every time this specific page actually opens (data-white matches
+  // it), snap the track back to the first slide instead of leaving it
+  // wherever it was left last time. Toggling scroll-behavior to "auto"
+  // for the reset means it jumps instantly rather than visibly
+  // scrolling backwards as the page fades in; scroll-behavior:smooth
+  // (CSS) is restored right after for normal dot/swipe navigation.
   if (pageNumber) {
     new MutationObserver(() => {
       if (heroContent.dataset.white === pageNumber) {
-        requestAnimationFrame(() => setActive(activeIndex));
+        track.style.scrollBehavior = "auto";
+        track.scrollLeft = 0;
+        track.style.scrollBehavior = "";
+        setActive(0);
       }
     }).observe(heroContent, { attributes: true, attributeFilter: ["data-white"] });
   }

@@ -835,25 +835,26 @@ body {
   gap: 3.2vh;
 }
 
-/* Fixed height, natural (auto) width per image - matching the Figma
-   gallery frames exactly (every render there shared one height, each
-   at its own different width, not a uniform box). The viewport's own
-   width is set by script.js to match whichever slide is currently
-   active, so the "window" itself resizes as you move between a
-   landscape and a portrait photo instead of either cropping the photo
-   (object-fit:cover) or leaving empty letterbox space around it
-   (object-fit:contain in a fixed-width box). This CSS width is just
-   the pre-JS fallback for the very first paint. */
+/* Fixed, clipped frame - doesn't resize/animate as you move between
+   slides (a JS-driven resize-to-fit-each-photo was tried and rolled
+   back for looking unnatural). aspect-ratio:4/3 matches every
+   gallery's own widest photo (all five products' widest shot is a 4:3
+   landscape), so at a fixed height the browser derives the matching
+   width automatically - correct at any window size, no per-gallery vw
+   math needed. Each image then object-fit:contain within this shared
+   box: the 4:3 ones fill it exactly edge to edge, portrait ones are
+   height-constrained (same height as every other slide) and centered
+   with even space left/right instead of being cropped or stretched. */
 .hero__white-gallery-viewport {
-  width: 34vw;
   height: 45.14vh;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  transition: width 0.3s ease;
 }
 
 .hero__white-gallery-track {
   display: flex;
   height: 100%;
+  gap: 1.5vw;
   overflow-x: auto;
   overflow-anchor: none;
   scroll-snap-type: x mandatory;
@@ -866,7 +867,7 @@ body {
 }
 
 .hero__white-slide {
-  flex: 0 0 auto;
+  flex: 0 0 100%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -876,8 +877,9 @@ body {
 
 .hero__white-slide img {
   display: block;
-  height: 100%;
-  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .hero__white-dots {
@@ -901,5 +903,20 @@ body {
 
 .hero__white-dot.is-active {
   background: #263c47;
+}
+
+/* Bottom-left mark (Figma node 805:12), left-aligned with the back
+   arrow above it. Both use vh-based left offsets rather than vw or a
+   %-of-content value, so the alignment holds at any window width: the
+   back arrow's own position is 3.49% of .hero__content's width, and
+   content width is always a fixed 140.625% of window height, so
+   3.49% x 1.40625 = 4.908vh is the same pixel offset by construction,
+   not just a coincidence at one particular window size. */
+.hero__white-logo {
+  position: absolute;
+  left: 4.908vh;
+  bottom: 4.336vh;
+  height: 2vh;
+  width: auto;
 }
 
