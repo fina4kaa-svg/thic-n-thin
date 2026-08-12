@@ -361,6 +361,16 @@ body {
   left: 101.069%;
 }
 
+/* Mermaid's mint-right sits at its own bespoke 101.93% (see
+   .hero__mint--right above) rather than one of the other shared
+   values, so it needs its own number here too - same delta-tracking
+   relationship as the others (confirmed by fitting the 3 existing
+   pairs: rail% = 0.63821 x mint% + 39.162, which lands on all three
+   other pages' actual values almost exactly). */
+.hero__content[data-detail="3"] .hero__rail-item {
+  left: 104.218%;
+}
+
 /* Product preview images - hidden until their number (or its enlarged
    hover circle above) is hovered or focused. Same position/size/shadow
    as set in the Figma frame, converted to % of the design so they scale
@@ -772,6 +782,14 @@ body {
 
 .hero__content[data-detail="2"] .hero__plus-btn {
   left: 66.7418%;
+}
+
+/* Same reasoning as the rail-item override above - mermaid's mint
+   sits at its own bespoke position, so the plus button needs its own
+   tracked value too (same fitted relationship: plus% = 0.638712 x
+   mint% + 4.7947). */
+.hero__content[data-detail="3"] .hero__plus-btn {
+  left: 69.9%;
 }
 
 /* One white page per product, not a shared overlay - each is its own
