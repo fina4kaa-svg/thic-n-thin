@@ -12,12 +12,14 @@ body {
   font-family: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
   background: #fff;
   /* The "t" mark from the logo (assets/logo-mark.svg's own icon glyph,
-     isolated then rasterized to PNG) as the site-wide cursor, hotspot
-     at its top-left corner. PNG rather than SVG - Safari silently
+     isolated then rasterized to PNG) as the site-wide cursor, hotspot at
+     its center (image is 17x19, so 9 10) rather than its top-left corner,
+     so the pointer's actual position lines up with the middle of the
+     glyph instead of its corner. PNG rather than SVG - Safari silently
      ignores SVG cursor images and falls back to the system arrow with
      no error, while PNG cursors are universally supported. Falls back
      to the normal arrow/pointer if the image still fails to load. */
-  cursor: url("assets/cursor-t.png") 0 0, auto;
+  cursor: url("assets/cursor-t.png") 9 10, auto;
 }
 
 /* Always fills the whole window - this is just the backdrop now, separate
@@ -205,7 +207,7 @@ body {
   padding: 0;
   border: none;
   background: none;
-  cursor: url("assets/cursor-t.png") 0 0, pointer;
+  cursor: url("assets/cursor-t.png") 9 10, pointer;
   opacity: 1;
   transition: opacity 0.1s ease;
   z-index: 3;
@@ -269,7 +271,7 @@ body {
   text-decoration: none;
   white-space: nowrap;
   color: #fff;
-  cursor: url("assets/cursor-t.png") 0 0, pointer;
+  cursor: url("assets/cursor-t.png") 9 10, pointer;
   opacity: 1;
   transition: opacity 0.1s ease, left 0.45s ease;
 }
@@ -498,6 +500,19 @@ body {
   width: auto;
   height: 107.83%;
   aspect-ratio: 3821 / 3651;
+  /* This photo's own left edge (3.2% of content) sits inside the mint-left
+     piece's curved bottom-left cutout (see vector-left-solid.svg - the
+     same "background should show through here, not the photo" cutout
+     .hero__detail-photo--horizontal's clip-path handles for pages 01/04),
+     which none of the *other* vertical pages' photos reach because their
+     shared left:9.72% sits past the cutout's rightmost point (~6% of
+     content). Points below trace the cutout's actual bezier curve (sampled
+     from vector-left-solid.svg's path, not approximated as straight
+     segments) converted from hero__content-relative % into this box's own
+     (photo-relative) % - a coarser approximation let a sliver of photo
+     show past the curve's widest point near the bottom-left corner. */
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 3.94% 94.91%, 3.06% 94.43%, 2.19% 93.9%, 1.34% 93.28%, 0.52% 92.53%, -0.27% 91.63%, -1% 90.54%, -1.68% 89.22%, -2.29% 87.66%, -2.46% 87.07%, -2.62% 86.44%, -2.77% 85.75%, -2.91% 85.01%, -3.04% 84.23%, -3.15% 83.4%, -3.26% 82.53%, -3.35% 81.63%, -3.43% 80.37%, -3.49% 79.09%, -3.53% 77.83%, -3.56% 76.62%, -3.57% 75.49%, -3.58% 74.47%, -3.59% 73.59%, -3.59% 72.9%, 0% 72.9%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 3.94% 94.91%, 3.06% 94.43%, 2.19% 93.9%, 1.34% 93.28%, 0.52% 92.53%, -0.27% 91.63%, -1% 90.54%, -1.68% 89.22%, -2.29% 87.66%, -2.46% 87.07%, -2.62% 86.44%, -2.77% 85.75%, -2.91% 85.01%, -3.04% 84.23%, -3.15% 83.4%, -3.26% 82.53%, -3.35% 81.63%, -3.43% 80.37%, -3.49% 79.09%, -3.53% 77.83%, -3.56% 76.62%, -3.57% 75.49%, -3.58% 74.47%, -3.59% 73.59%, -3.59% 72.9%, 0% 72.9%);
 }
 
 /* Stacked exactly on the base photo; fades in on top of it when the
@@ -514,7 +529,7 @@ body {
   color: #fff;
   white-space: nowrap;
   z-index: 4;
-  cursor: url("assets/cursor-t.png") 0 0, pointer;
+  cursor: url("assets/cursor-t.png") 9 10, pointer;
   transition: opacity 0.45s ease, color 0.45s ease;
 }
 
@@ -570,15 +585,18 @@ body {
    repositioned - the bottom-left corner of the photo's own box is cut
    away so nothing renders there. Shared by class (not scoped to a
    specific data-n) so any landscape detail photo gets the same
-   treatment. */
+   treatment. Points trace the cutout's actual bezier curve (sampled from
+   vector-left-solid.svg's path) rather than a single straight notch - the
+   old two-point notch under-cut the curve's widest point near the very
+   bottom-left corner, letting a sliver of photo show past it. */
 .hero__detail-photo--horizontal {
   top: 0;
   left: -3%;
   width: auto;
   height: 100%;
   aspect-ratio: 4000 / 3000;
-  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 8.44% 100%, 8.44% 73%, 0% 73%);
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 9.94% 100%, 9.19% 99.48%, 8.45% 98.91%, 7.73% 98.24%, 7.04% 97.43%, 6.37% 96.46%, 5.75% 95.28%, 5.18% 93.87%, 4.66% 92.18%, 4.51% 91.55%, 4.38% 90.86%, 4.25% 90.12%, 4.14% 89.32%, 4.03% 88.48%, 3.93% 87.59%, 3.84% 86.65%, 3.76% 85.68%, 3.7% 84.31%, 3.65% 82.94%, 3.61% 81.58%, 3.59% 80.27%, 3.57% 79.05%, 3.57% 77.96%, 3.56% 77.01%, 3.56% 76.26%, 0% 76.26%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 9.94% 100%, 9.19% 99.48%, 8.45% 98.91%, 7.73% 98.24%, 7.04% 97.43%, 6.37% 96.46%, 5.75% 95.28%, 5.18% 93.87%, 4.66% 92.18%, 4.51% 91.55%, 4.38% 90.86%, 4.25% 90.12%, 4.14% 89.32%, 4.03% 88.48%, 3.93% 87.59%, 3.84% 86.65%, 3.76% 85.68%, 3.7% 84.31%, 3.65% 82.94%, 3.61% 81.58%, 3.59% 80.27%, 3.57% 79.05%, 3.57% 77.96%, 3.56% 77.01%, 3.56% 76.26%, 0% 76.26%);
 }
 
 /* Mermaid (03, Figma nodes 897:152 default / 897:163 hover). No
@@ -703,7 +721,7 @@ body {
   padding: 0;
   border: none;
   background: none;
-  cursor: url("assets/cursor-t.png") 0 0, pointer;
+  cursor: url("assets/cursor-t.png") 9 10, pointer;
   z-index: 4;
   opacity: 0;
   pointer-events: none;
@@ -762,7 +780,7 @@ body {
   padding: 0;
   border: none;
   background: none;
-  cursor: url("assets/cursor-t.png") 0 0, pointer;
+  cursor: url("assets/cursor-t.png") 9 10, pointer;
   z-index: 4;
   opacity: 0;
   pointer-events: none;
@@ -845,7 +863,7 @@ body {
   font-size: 1.6667cqw;
   color: #000;
   white-space: nowrap;
-  cursor: url("assets/cursor-t.png") 0 0, pointer;
+  cursor: url("assets/cursor-t.png") 9 10, pointer;
   opacity: 1;
   transition: opacity 0.25s ease;
 }
@@ -1076,7 +1094,7 @@ body {
   padding: 0;
   margin: 0;
   background: #d9d9d9;
-  cursor: url("assets/cursor-t.png") 0 0, pointer;
+  cursor: url("assets/cursor-t.png") 9 10, pointer;
   transition: background-color 0.2s ease;
 }
 
